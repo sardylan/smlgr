@@ -20,22 +20,9 @@
  */
 
 
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef __UTILS_H
+#define __UTILS_H
 
-#include "config.h"
-#include "smlgr.h"
-#include "utils.h"
+char* checksum16(char*);
 
-int main(int argc, char** argv)
-{
-    char* sum;
-
-    sum = checksum16(INVERTER_QUERY);
-
-    printf("%s\t%s\n", sum, INVERTER_QUERY);
-
-    free(sum);
-
-    return 0;
-}
+#endif

@@ -29,6 +29,7 @@ STRIPFLAGS =	--strip-all
 TARGET =	smlgr
 
 OBJS =		smlgr.o \
+		utils.o
 
 
 all: debug

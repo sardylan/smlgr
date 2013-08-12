@@ -20,22 +20,18 @@
  */
 
 
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef __CONFIG_H
+#define __CONFIG_H
 
-#include "config.h"
-#include "smlgr.h"
-#include "utils.h"
+#define INVERTER_IP_ADDR "192.168.11.99"
+#define INVERTER_IP_PORT 12345
 
-int main(int argc, char** argv)
-{
-    char* sum;
+#define INVERTER_QUERY "UDC;IDC;UL1;IL1;PAC;PRL;TKK;TNF"
 
-    sum = checksum16(INVERTER_QUERY);
+#define MYSQL_IP "127.0.0.1"
+#define MYSQL_PORT 3306
+#define MYSQL_USER "smlgr"
+#define MYSQL_PASSWORD "smlgr"
+#define MYSQL_DB "smlgr"
 
-    printf("%s\t%s\n", sum, INVERTER_QUERY);
-
-    free(sum);
-
-    return 0;
-}
+#endif

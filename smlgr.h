@@ -20,22 +20,7 @@
  */
 
 
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef __SMLGR_H
+#define __SMLGR_H
 
-#include "config.h"
-#include "smlgr.h"
-#include "utils.h"
-
-int main(int argc, char** argv)
-{
-    char* sum;
-
-    sum = checksum16(INVERTER_QUERY);
-
-    printf("%s\t%s\n", sum, INVERTER_QUERY);
-
-    free(sum);
-
-    return 0;
-}
+#endif

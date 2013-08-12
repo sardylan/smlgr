@@ -22,20 +22,43 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
+#include <string.h>
 
 #include "config.h"
-#include "smlgr.h"
 #include "utils.h"
 
-int main(int argc, char** argv)
+char* checksum16(char* input)
 {
-    char* sum;
+    int i;
+    int ln;
+    int sum;
+    char* ret;
 
-    sum = checksum16(INVERTER_QUERY);
+    ret = (char *) calloc(5, sizeof(char));
 
-    printf("%s\t%s\n", sum, INVERTER_QUERY);
+    *ret = '0';
+    *(ret + 1) = '0';
+    *(ret + 2) = '0';
+    *(ret + 3) = '0';
+    *(ret + 4) = '\0';
 
-    free(sum);
+    sum = 0;
 
-    return 0;
+    if(input != NULL) {
+        ln = strlen(input);
+
+        for(i=0; i<ln; i++) {
+            sum += input[i];
+            sum %= (int) pow(2, 16);
+        }
+    }
+
+    sprintf(ret, "%4X", sum);
+
+    for(i=0; i<4; i++)
+        if(*(ret+i) == ' ')
+            *(ret+i) = '0';
+
+    return ret;
 }
