@@ -19,7 +19,6 @@
  *
  */
 
-// {01;FB;70|64:IDC=2A5;UL1=952;TKK=31;IL1=356;SYS=4E28,0;TNF=138E;UDC=C2F;PAC=FBC;PRL=3D;KT0=2F16;SYS=4E28,0|1A79}
 #include <stdio.h>
 #include <stdlib.h>
 
