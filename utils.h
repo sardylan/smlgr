@@ -23,6 +23,19 @@
 #ifndef __UTILS_H
 #define __UTILS_H
 
+struct infos_s {
+    char* param;
+    char* value;
+    struct infos_s* next;
+};
+
+typedef struct infos_s infos;
+
+char* decToHex(int, int);
 char* checksum16(char*);
+char* strPrepare(char*);
+infos* strParse(char*);
+void infosPrint(infos*);
+void infosFree(infos*);
 
 #endif
