@@ -98,7 +98,7 @@ char *strPrepare(char *query)
             inv_id = decToHex(INVERTER_NUM, 2);
             len = decToHex(13 + ln + 6, 2);
 
-            sprintf(tmp, "%s;FB;%s|64:%s|", inv_id, len, query);
+            sprintf(tmp, "FB;%s;%s|64:%s|", inv_id, len, query);
             checksum = checksum16(tmp);
 
             sprintf(ret, "{%s%s}", tmp, checksum);
@@ -109,7 +109,7 @@ char *strPrepare(char *query)
         }
     }
 
-    uiMessage(UI_DEBUG, "--------- ----- %s", ret);
+    uiMessage(UI_DEBUG, "Preparing query %s", ret);
 
     return ret;
 }
@@ -157,7 +157,7 @@ infos *strParse(char *response)
                 strcpy(ret->param, param);
                 strcpy(ret->value, value);
 
-                uiMessage(UI_DEBUG, "------- -------- %s = ", ret->param, ret->value);
+                uiMessage(UI_DEBUG, "Parsing response %s = ", ret->param, ret->value);
 
                 mode = 0;
                 j = 0;

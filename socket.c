@@ -38,16 +38,12 @@
 void sckCreate(int *sock, char *addr, int port)
 {
     struct sockaddr_in serv_addr;
-    int flag;
 
     uiMessage(UI_DEBUG, "Creating socket %s:%d", addr, port);
 
     *sock = socket(AF_INET, SOCK_STREAM, 0);
 
     if(*sock != -1) {
-        flag = 1;
-        setsockopt(*sock, IPPROTO_TCP, TCP_NODELAY, (char *) &flag, sizeof(flag));
-
         memset(&serv_addr, '0', sizeof(serv_addr));
 
         serv_addr.sin_family = AF_INET;
@@ -68,7 +64,7 @@ void sckDestroy(int *sock)
 
 void sckSend(int *sock, char *buff)
 {
-    uiMessage(UI_DEBUG, "------- ----- %s", buff);
+    uiMessage(UI_DEBUG, "Sending query %s", buff);
 
     write(*sock, buff, strlen(buff));
 }
@@ -93,7 +89,7 @@ char* sckRecv(int *sock)
         strcpy(ret, buff);
     }
 
-    uiMessage(UI_DEBUG, "--------- -------- %s", ret);
+    uiMessage(UI_DEBUG, "Receiving response %s", ret);
 
     return ret;
 }

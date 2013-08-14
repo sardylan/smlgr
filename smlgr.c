@@ -51,7 +51,7 @@ void smlgr()
 
     if(*sock != -1) {
         while(1) {
-            uiMessage(UI_INFO, "Creating inverted query string");
+            uiMessage(UI_INFO, "Creating inverter query string");
             query = strPrepare(LGR_QUERY);
 
             uiMessage(UI_INFO, "Sending query");
