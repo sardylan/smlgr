@@ -29,6 +29,7 @@
 #include <sys/types.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
+#include <netinet/tcp.h>
 
 #include "config.h"
 #include "socket.h"
@@ -37,12 +38,16 @@
 void sckCreate(int *sock, char *addr, int port)
 {
     struct sockaddr_in serv_addr;
+    int flag;
 
     uiMessage(UI_DEBUG, "Creating socket %s:%d", addr, port);
 
     *sock = socket(AF_INET, SOCK_STREAM, 0);
 
     if(*sock != -1) {
+        flag = 1;
+        setsockopt(*sock, IPPROTO_TCP, TCP_NODELAY, (char *) &flag, sizeof(flag));
+
         memset(&serv_addr, '0', sizeof(serv_addr));
 
         serv_addr.sin_family = AF_INET;
