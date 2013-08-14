@@ -36,6 +36,7 @@ char *checksum16(char *);
 char *strPrepare(char *);
 infos *strParse(char *);
 void infosPrint(infos *);
+int infosCounting(infos *);
 void infosFree(infos *);
 
 #endif

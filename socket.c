@@ -64,7 +64,7 @@ void sckDestroy(int *sock)
 
 void sckSend(int *sock, char *buff)
 {
-    uiMessage(UI_DEBUG, "Sending query %s", buff);
+    uiMessage(UI_DEBUG, ">>> %s", buff);
 
     write(*sock, buff, strlen(buff));
 }
@@ -89,7 +89,7 @@ char* sckRecv(int *sock)
         strcpy(ret, buff);
     }
 
-    uiMessage(UI_DEBUG, "Receiving response %s", ret);
+    uiMessage(UI_DEBUG, "<<< %s", ret);
 
     return ret;
 }

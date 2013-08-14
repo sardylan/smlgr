@@ -63,9 +63,10 @@ void smlgr()
             uiMessage(UI_INFO, "Parsing data");
             data = strParse(response);
 
-            uiMessage(UI_INFO, "Printing data");
-            infosPrint(data);
-            //sqlSave(data);
+            uiMessage(UI_DEBUG, "%d elements on response", infosCounting(data));
+
+            uiMessage(UI_INFO, "Adding data to DB");
+            sqlSave(data);
 
             uiMessage(UI_INFO, "Freeing memory");
             infosFree(data);

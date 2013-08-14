@@ -88,7 +88,7 @@ char *strPrepare(char *query)
     ret = NULL;
 
     if(query != NULL) {
-        uiMessage(UI_DEBUG, "Preparing query %s", query);
+        uiMessage(UI_DEBUG, "Query to prepare: %s", query);
 
         ln = strlen(query);
 
@@ -109,7 +109,7 @@ char *strPrepare(char *query)
         }
     }
 
-    uiMessage(UI_DEBUG, "Preparing query %s", ret);
+    uiMessage(UI_DEBUG, "Query prepared: %s", ret);
 
     return ret;
 }
@@ -125,7 +125,7 @@ infos *strParse(char *response)
     char param[8];
     char value[16];
 
-    uiMessage(UI_DEBUG, "Parsing response %s", response);
+    uiMessage(UI_DEBUG, "Response to parse: %s", response);
 
     ret = (infos *) malloc(sizeof(infos));
     first = ret;
@@ -157,7 +157,7 @@ infos *strParse(char *response)
                 strcpy(ret->param, param);
                 strcpy(ret->value, value);
 
-                uiMessage(UI_DEBUG, "Parsing response %s = ", ret->param, ret->value);
+                uiMessage(UI_DEBUG, "%s = %s", ret->param, ret->value);
 
                 mode = 0;
                 j = 0;
@@ -188,6 +188,21 @@ void infosPrint(infos *input)
         printf("%s = %s\n", input->param, input->value);
         input = input->next;
     }
+}
+
+int infosCounting(infos *input)
+{
+    int ret;
+
+    input = input->next;
+    ret = 0;
+
+    while(strlen(input->param) > 0) {
+        ret++;
+        input = input->next;
+    }
+
+    return ret;
 }
 
 void infosFree(infos *input)
