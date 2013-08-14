@@ -27,6 +27,7 @@
 
 #include "config.h"
 #include "utils.h"
+#include "ui.h"
 
 char *decToHex(int input, int dim)
 {
@@ -87,6 +88,8 @@ char *strPrepare(char *query)
     ret = NULL;
 
     if(query != NULL) {
+        uiMessage(UI_DEBUG, "Preparing query %s", query);
+
         ln = strlen(query);
 
         if(ln >= 3) {
@@ -106,6 +109,8 @@ char *strPrepare(char *query)
         }
     }
 
+    uiMessage(UI_DEBUG, "--------- ----- %s", ret);
+
     return ret;
 }
 
@@ -119,6 +124,8 @@ infos *strParse(char *response)
     int mode;
     char param[8];
     char value[16];
+
+    uiMessage(UI_DEBUG, "Parsing response %s", response);
 
     ret = (infos *) malloc(sizeof(infos));
     first = ret;
@@ -149,6 +156,8 @@ infos *strParse(char *response)
                 ret->value = (char *) calloc(strlen(value)+1, sizeof(char));
                 strcpy(ret->param, param);
                 strcpy(ret->value, value);
+
+                uiMessage(UI_DEBUG, "------- -------- %s = ", ret->param, ret->value);
 
                 mode = 0;
                 j = 0;

@@ -32,10 +32,13 @@
 
 #include "config.h"
 #include "socket.h"
+#include "ui.h"
 
 void sckCreate(int *sock, char *addr, int port)
 {
     struct sockaddr_in serv_addr;
+
+    uiMessage(UI_DEBUG, "Creating socket %s:%d", addr, port);
 
     *sock = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -60,6 +63,8 @@ void sckDestroy(int *sock)
 
 void sckSend(int *sock, char *buff)
 {
+    uiMessage(UI_DEBUG, "------- ----- %s", buff);
+
     write(*sock, buff, strlen(buff));
 }
 
@@ -82,6 +87,8 @@ char* sckRecv(int *sock)
         ret = (char *) realloc(ret, bytes+1);
         strcpy(ret, buff);
     }
+
+    uiMessage(UI_DEBUG, "--------- -------- %s", ret);
 
     return ret;
 }

@@ -28,6 +28,7 @@
 #include "config.h"
 #include "sql.h"
 #include "utils.h"
+#include "ui.h"
 
 void sqlSave(infos *data)
 {
