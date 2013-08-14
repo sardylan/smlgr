@@ -35,6 +35,14 @@
 #include "socket.h"
 #include "ui.h"
 
+
+/**
+ * This function returns a connected socket to the SolarMax inverter
+ * @param[in] sock Valid integer pointer where to store the socket descriptor
+ * @param[in] addr IP Address of the inverter
+ * @param[in] port TCP port number
+ */
+
 void sckCreate(int *sock, char *addr, int port)
 {
     struct sockaddr_in serv_addr;
@@ -57,10 +65,23 @@ void sckCreate(int *sock, char *addr, int port)
     }
 }
 
+
+/**
+ * Socket destroyer
+ * @param[in] sock Valid Socket to close;
+ */
+
 void sckDestroy(int *sock)
 {
     close(*sock);
 }
+
+
+/**
+ * Function used to send data into the socket
+ * @param[in] sock Valid connected socket
+ * @param[in] buff String to send
+ */
 
 void sckSend(int *sock, char *buff)
 {
@@ -68,6 +89,12 @@ void sckSend(int *sock, char *buff)
 
     write(*sock, buff, strlen(buff));
 }
+
+/**
+ * This function returns the received string from the socket
+ * @param[in] sock Valid connected socket
+ * @param[out] ret String received
+ */
 
 char* sckRecv(int *sock)
 {

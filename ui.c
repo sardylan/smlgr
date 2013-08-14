@@ -28,6 +28,13 @@
 #include "config.h"
 #include "ui.h"
 
+
+/**
+ * Debugging function
+ * @param[in] level Level of the messages
+ * @param[in] text Text message
+ */
+
 void uiMessage(int level, char *text, ...)
 {
     va_list args;

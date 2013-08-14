@@ -30,7 +30,46 @@
 #include "utils.h"
 #include "ui.h"
 
+/**
+ * Main function called to save data into DB
+ * @param[in] data data struct of a valid data list
+ */
+
 void sqlSave(infos *data)
 {
-//     uiMessage(UI_DEBUG, ">>> %s", buff);
+    char sql_query[2048];
+    char params[1024];
+    char values[1024];
+    int i;
+
+    memset(params, '\0', sizeof(params));
+    memset(values, '\0', sizeof(values));
+
+    data = data->next;
+
+    i = 0;
+
+    while(strlen(data->param) > 0) {
+        if(i > 0) {
+            strcat(params, ", ");
+            strcat(values, ", ");
+        }
+
+        strcat(params, "'");
+        strcat(params, data->param);
+        strcat(params, "'");
+
+        strcat(values, "'");
+        strcat(values, data->value);
+        strcat(values, "'");
+
+        data = data->next;
+        i++;
+    }
+
+    uiMessage(UI_DEBUG, "SQL params: %s", params);
+    uiMessage(UI_DEBUG, "SQL values: %s", values);
+
+    sprintf(sql_query, "INSERT INTO %s (%s) VALUES (%s);", MYSQL_TABLE, params, values);
+    uiMessage(UI_DEBUG, "SQL Query: %s", sql_query);
 }

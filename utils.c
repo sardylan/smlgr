@@ -29,6 +29,13 @@
 #include "utils.h"
 #include "ui.h"
 
+/**
+ * Function used to convert an integer in a fixed-lenght hexadecimal string
+ * @param[in] input Integer input value
+ * @param[in] dim Output lenght
+ * @param[out] ret Output hex value
+ */
+
 char *decToHex(int input, int dim)
 {
     char *ret;
@@ -53,6 +60,13 @@ char *decToHex(int input, int dim)
     return ret;
 }
 
+
+/**
+ * Function used to compute a standard 16-bit checksum
+ * @param[in] input Input string
+ * @param[out] ret Output 4-digit hex chechsum value
+ */
+
 char *checksum16(char *input)
 {
     char *ret;
@@ -75,6 +89,13 @@ char *checksum16(char *input)
 
     return ret;
 }
+
+
+/**
+ * Function used prepare the string to send to SolarMax inverter
+ * @param[in] input Param-to-query input string
+ * @param[out] ret Complete output string to send
+ */
 
 char *strPrepare(char *query)
 {
@@ -113,6 +134,13 @@ char *strPrepare(char *query)
 
     return ret;
 }
+
+
+/**
+ * Function used to split and parse response string sent by inverter
+ * @param[in] input Input string to parse
+ * @param[out] ret Circular list with all response splitted
+ */
 
 infos *strParse(char *response)
 {
@@ -180,6 +208,12 @@ infos *strParse(char *response)
     return first;
 }
 
+
+/**
+ * Utility function to print out a list
+ * @param[in] input Input struct to print
+ */
+
 void infosPrint(infos *input)
 {
     input = input->next;
@@ -189,6 +223,13 @@ void infosPrint(infos *input)
         input = input->next;
     }
 }
+
+
+/**
+ * Function used to count all element in the list
+ * @param[in] input Input data list
+ * @param[out] ret Interger value of element
+ */
 
 int infosCounting(infos *input)
 {
@@ -204,6 +245,12 @@ int infosCounting(infos *input)
 
     return ret;
 }
+
+
+/**
+ * Function used to free memory used by a data list
+ * @param[in] input Input list to free
+ */
 
 void infosFree(infos *input)
 {

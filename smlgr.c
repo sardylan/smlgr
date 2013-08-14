@@ -37,6 +37,10 @@ int main(int argc, char **argv)
     return 0;
 }
 
+/**
+ * Main program function
+ */
+
 void smlgr()
 {
     int *sock;
