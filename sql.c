@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <mysql/mysql.h>
 
 #include "config.h"
 #include "sql.h"
@@ -37,7 +38,9 @@
 
 void sqlSave(infos *data)
 {
+    MYSQL *mysql_connection;
     char sql_query[2048];
+    int sql_return;
     char params[1024];
     char values[1024];
     int i;
@@ -71,5 +74,81 @@ void sqlSave(infos *data)
     uiMessage(UI_DEBUG, "SQL values: %s", values);
 
     sprintf(sql_query, "INSERT INTO %s (%s) VALUES (%s);", MYSQL_TABLE, params, values);
-    uiMessage(UI_DEBUG, "SQL Query: %s", sql_query);
+
+    uiMessage(UI_INFO, "Connecting to MySQL DB");
+
+    if(mysqlStatsDBOpen(mysql_connection, MYSQL_SERVER, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB) == 1) {
+        uiMessage(UI_DEBUG, "SQL Query: %s", sql_query);
+        sql_return = mysql_query(mysql_connection, sql_query);
+
+        if(sql_return == 0) {
+            uiMessage(UI_INFO, "Data added to DB");
+        } else {
+            uiMessage(UI_WARNING, "Error execute query");
+        }
+
+        mysql_close(mysql_connection);
+    } else {
+        uiMessage(UI_WARNING, "Can't connect to MySQL DB");
+    }
+}
+
+
+/**
+ * Function used to escape a string according to connection parameters
+ * @param[in] mysql_connection MySQL connector
+ * @param[in] input Unescaped input string
+ * @param[out] ret Escaped string
+ */
+
+char *mysqlStringEscape(MYSQL *mysql_connection, const char *input)
+{
+    char *ret;
+    char output[1024];
+    size_t ln;
+
+    if(input == NULL) { // If input string is NULL (not empty string) we return an empty string
+        ret = (char *) malloc(sizeof(char));
+        *(ret) = '\0';
+    } else { // else we use the mysql_real_escape_string to escape problem-generating characters
+        mysql_real_escape_string(mysql_connection, output, input, (unsigned long) strlen(input));
+        ln = strlen(output) + 1;
+        ret = (char *) calloc(ln, sizeof(char));
+        strcpy(ret, output);
+    }
+
+    return ret;
+}
+
+
+/**
+ * Creates the global DB connection
+ * @param[in] mysql_connection MySQL connector
+ * @param[out] ret 1 if success, 0 on error
+ */
+
+int mysqlStatsDBOpen(MYSQL *mysql_connection, char *mysql_server, int mysql_port, char *mysql_user, char *mysql_psw, char *mysql_db)
+{
+    int ret;
+    MYSQL *temp_connection;
+    unsigned int mysql_timeout;
+
+    ret = 0;
+
+    mysql_timeout = 2;
+
+    uiMessage(UI_DEBUG, "Creating MySQL connection");
+
+    temp_connection = mysql_init(NULL);
+    mysql_options(temp_connection, MYSQL_OPT_CONNECT_TIMEOUT, (char *) &mysql_timeout);
+
+    if(temp_connection != NULL) {
+        uiMessage(UI_DEBUG, "Connecting to mysql://%s:%s@%s:%d/%s", mysql_user, mysql_psw, mysql_server, mysql_port, mysql_db);
+        mysql_connection = mysql_real_connect(temp_connection, mysql_server, mysql_user, mysql_psw, mysql_db, mysql_port, NULL, 0);
+
+        if(mysql_connection != NULL)
+            ret = 1;
+    }
+
+    return ret;
 }

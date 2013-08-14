@@ -23,8 +23,12 @@
 #ifndef __SQL_H
 #define __SQL_H
 
+#include <mysql/mysql.h>
+
 #include "utils.h"
 
 void sqlSave(infos *);
+char *mysqlStringEscape(MYSQL *, const char *);
+int mysqlStatsDBOpen(MYSQL *, char *, int, char *, char *, char *);
 
 #endif

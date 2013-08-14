@@ -32,7 +32,7 @@
 #define LGR_QUERY "UDC;IDC;UL1;IL1;PAC;PRL;TKK;TNF"
 #define LGR_INTERVAL 10
 
-#define MYSQL_IP "127.0.0.1"
+#define MYSQL_SERVER "127.0.0.1"
 #define MYSQL_PORT 3306
 #define MYSQL_USER "smlgr"
 #define MYSQL_PASSWORD "smlgr"
