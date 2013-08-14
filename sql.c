@@ -31,68 +31,6 @@
 #include "utils.h"
 #include "ui.h"
 
-/**
- * Main function called to save data into DB
- * @param[in] data data struct of a valid data list
- */
-
-void sqlSave(infos *data)
-{
-    MYSQL *mysql_connection;
-    char sql_query[2048];
-    int sql_return;
-    char params[1024];
-    char values[1024];
-    int i;
-
-    memset(params, '\0', sizeof(params));
-    memset(values, '\0', sizeof(values));
-
-    data = data->next;
-
-    i = 0;
-
-    while(strlen(data->param) > 0) {
-        if(i > 0) {
-            strcat(params, ", ");
-            strcat(values, ", ");
-        }
-
-        strcat(params, "'");
-        strcat(params, data->param);
-        strcat(params, "'");
-
-        strcat(values, "'");
-        strcat(values, data->value);
-        strcat(values, "'");
-
-        data = data->next;
-        i++;
-    }
-
-    uiMessage(UI_DEBUG, "SQL params: %s", params);
-    uiMessage(UI_DEBUG, "SQL values: %s", values);
-
-    sprintf(sql_query, "INSERT INTO %s (%s) VALUES (%s);", MYSQL_TABLE, params, values);
-
-    uiMessage(UI_INFO, "Connecting to MySQL DB");
-
-    if(mysqlStatsDBOpen(mysql_connection, MYSQL_SERVER, MYSQL_PORT, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB) == 1) {
-        uiMessage(UI_DEBUG, "SQL Query: %s", sql_query);
-        sql_return = mysql_query(mysql_connection, sql_query);
-
-        if(sql_return == 0) {
-            uiMessage(UI_INFO, "Data added to DB");
-        } else {
-            uiMessage(UI_WARNING, "Error execute query");
-        }
-
-        mysql_close(mysql_connection);
-    } else {
-        uiMessage(UI_WARNING, "Can't connect to MySQL DB");
-    }
-}
-
 
 /**
  * Function used to escape a string according to connection parameters
@@ -122,33 +60,79 @@ char *mysqlStringEscape(MYSQL *mysql_connection, const char *input)
 
 
 /**
- * Creates the global DB connection
- * @param[in] mysql_connection MySQL connector
- * @param[out] ret 1 if success, 0 on error
+ * Main function called to save data into DB
+ * @param[in] data data struct of a valid data list
  */
 
-int mysqlStatsDBOpen(MYSQL *mysql_connection, char *mysql_server, int mysql_port, char *mysql_user, char *mysql_psw, char *mysql_db)
+void sqlSave(infos *data)
 {
-    int ret;
     MYSQL *temp_connection;
+    MYSQL *mysql_connection;
     unsigned int mysql_timeout;
+    char sql_query[2048];
+    int sql_return;
+    char params[1024];
+    char values[1024];
+    int i;
 
-    ret = 0;
+    memset(params, '\0', sizeof(params));
+    memset(values, '\0', sizeof(values));
+
+    data = data->next;
+
+    i = 0;
+
+    while(strlen(data->param) > 0) {
+        if(i > 0) {
+            strcat(params, ", ");
+            strcat(values, ", ");
+        }
+
+        strcat(params, "`");
+        strcat(params, data->param);
+        strcat(params, "`");
+
+        strcat(values, "0x");
+        strcat(values, data->value);
+//         strcat(values, "");
+
+        data = data->next;
+        i++;
+    }
+
+    uiMessage(UI_DEBUG, "SQL params: %s", params);
+    uiMessage(UI_DEBUG, "SQL values: %s", values);
+
+    sprintf(sql_query, "INSERT INTO %s (%s) VALUES (%s);", MYSQL_TABLE, params, values);
+
+    uiMessage(UI_INFO, "Connecting to MySQL DB");
 
     mysql_timeout = 2;
 
     uiMessage(UI_DEBUG, "Creating MySQL connection");
 
     temp_connection = mysql_init(NULL);
-    mysql_options(temp_connection, MYSQL_OPT_CONNECT_TIMEOUT, (char *) &mysql_timeout);
 
     if(temp_connection != NULL) {
-        uiMessage(UI_DEBUG, "Connecting to mysql://%s:%s@%s:%d/%s", mysql_user, mysql_psw, mysql_server, mysql_port, mysql_db);
-        mysql_connection = mysql_real_connect(temp_connection, mysql_server, mysql_user, mysql_psw, mysql_db, mysql_port, NULL, 0);
+        mysql_options(temp_connection, MYSQL_OPT_CONNECT_TIMEOUT, (char *) &mysql_timeout);
+        uiMessage(UI_DEBUG, "Connecting to mysql://%s:%s@%s:%d/%s", MYSQL_USER, MYSQL_PASSWORD, MYSQL_SERVER, MYSQL_PORT, MYSQL_DB);
 
-        if(mysql_connection != NULL)
-            ret = 1;
+        mysql_connection = mysql_real_connect(temp_connection, MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, MYSQL_PORT, NULL, 0);
+
+        if(mysql_connection != NULL) {
+            uiMessage(UI_DEBUG, "SQL Query: %s", sql_query);
+
+            sql_return = mysql_query(mysql_connection, sql_query);
+
+            if(sql_return == 0) {
+                uiMessage(UI_INFO, "Data added to DB");
+            } else {
+                uiMessage(UI_WARNING, "Error executing query");
+            }
+
+            mysql_close(mysql_connection);
+        } else {
+            uiMessage(UI_WARNING, "Can't connect to MySQL DB");
+        }
     }
-
-    return ret;
 }

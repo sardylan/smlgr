@@ -38,6 +38,6 @@
 #define MYSQL_PASSWORD "smlgr"
 #define MYSQL_DB "smlgr"
 
-#define MYSQL_TABLE "data"
+#define MYSQL_TABLE "invdata"
 
 #endif

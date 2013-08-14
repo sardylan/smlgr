@@ -27,8 +27,7 @@
 
 #include "utils.h"
 
-void sqlSave(infos *);
 char *mysqlStringEscape(MYSQL *, const char *);
-int mysqlStatsDBOpen(MYSQL *, char *, int, char *, char *, char *);
+void sqlSave(infos *);
 
 #endif
