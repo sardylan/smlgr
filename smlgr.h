@@ -23,4 +23,6 @@
 #ifndef __SMLGR_H
 #define __SMLGR_H
 
+void smlgr();
+
 #endif

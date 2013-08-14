@@ -20,22 +20,32 @@
  */
 
 
-#ifndef __UTILS_H
-#define __UTILS_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdarg.h>
 
-struct infos_s {
-    char *param;
-    char *value;
-    struct infos_s *next;
-};
+#include "config.h"
+#include "ui.h"
 
-typedef struct infos_s infos;
+void uiMessage(int level, char *text, ...)
+{
+    va_list args;
 
-char *decToHex(int, int);
-char *checksum16(char *);
-char *strPrepare(char *);
-infos *strParse(char *);
-void infosPrint(infos *);
-void infosFree(infos *);
+    va_start(args, text);
 
-#endif
+    if(level <= UI_DEBUG_LEVEL)
+        if(level == 1)
+            fprintf(stderr, "[ERROR] ");
+        if(level == 2)
+            fprintf(stderr, "[WARN]  ");
+        if(level == 3)
+            fprintf(stderr, "[INFO]  ");
+        if(level == 4)
+            fprintf(stderr, "[DEBUG] ");
+
+        vfprintf(stderr, text, args);
+        fprintf(stderr, "\n");
+
+    va_end(args);
+}

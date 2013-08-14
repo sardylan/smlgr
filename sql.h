@@ -20,22 +20,11 @@
  */
 
 
-#ifndef __UTILS_H
-#define __UTILS_H
+#ifndef __SQL_H
+#define __SQL_H
 
-struct infos_s {
-    char *param;
-    char *value;
-    struct infos_s *next;
-};
+#include "utils.h"
 
-typedef struct infos_s infos;
-
-char *decToHex(int, int);
-char *checksum16(char *);
-char *strPrepare(char *);
-infos *strParse(char *);
-void infosPrint(infos *);
-void infosFree(infos *);
+void sqlSave(infos *);
 
 #endif

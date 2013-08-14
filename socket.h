@@ -20,22 +20,12 @@
  */
 
 
-#ifndef __UTILS_H
-#define __UTILS_H
+#ifndef __SOCKET_H
+#define __SOCKET_H
 
-struct infos_s {
-    char *param;
-    char *value;
-    struct infos_s *next;
-};
-
-typedef struct infos_s infos;
-
-char *decToHex(int, int);
-char *checksum16(char *);
-char *strPrepare(char *);
-infos *strParse(char *);
-void infosPrint(infos *);
-void infosFree(infos *);
+void sckCreate(int *, char *, int);
+void sckDestroy(int *);
+void sckSend(int *, char *);
+char* sckRecv(int *);
 
 #endif

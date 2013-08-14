@@ -28,9 +28,9 @@
 #include "config.h"
 #include "utils.h"
 
-char* decToHex(int input, int dim)
+char *decToHex(int input, int dim)
 {
-    char* ret;
+    char *ret;
     char pattern[8];
     int i;
 
@@ -52,9 +52,9 @@ char* decToHex(int input, int dim)
     return ret;
 }
 
-char* checksum16(char* input)
+char *checksum16(char *input)
 {
-    char* ret;
+    char *ret;
     int i;
     size_t ln;
     int sum;
@@ -75,13 +75,13 @@ char* checksum16(char* input)
     return ret;
 }
 
-char* strPrepare(char* query)
+char *strPrepare(char *query)
 {
-    char* ret;
+    char *ret;
     size_t ln;
-    char* inv_id;
-    char* len;
-    char* checksum;
+    char *inv_id;
+    char *len;
+    char *checksum;
     char tmp[1024];
 
     ret = NULL;
@@ -109,10 +109,10 @@ char* strPrepare(char* query)
     return ret;
 }
 
-infos* strParse(char* response)
+infos *strParse(char *response)
 {
-    infos* ret;
-    infos* first;
+    infos *ret;
+    infos *first;
     char c;
     int i;
     int j;
@@ -171,7 +171,7 @@ infos* strParse(char* response)
     return first;
 }
 
-void infosPrint(infos* input)
+void infosPrint(infos *input)
 {
     input = input->next;
 
@@ -181,10 +181,10 @@ void infosPrint(infos* input)
     }
 }
 
-void infosFree(infos* input)
+void infosFree(infos *input)
 {
-    infos* prev;
-    infos* first;
+    infos *prev;
+    infos *first;
 
     first = input;
 

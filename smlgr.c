@@ -21,18 +21,65 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "config.h"
 #include "smlgr.h"
 #include "utils.h"
+#include "socket.h"
+#include "sql.h"
+#include "ui.h"
 
-int main(int argc, char** argv)
+int main(int argc, char **argv)
 {
-    infos* data;
-
-    data = strParse("{01;FB;70|64:IDC=2A5;UL1=952;TKK=31;IL1=356;SYS=4E28,0;TNF=138E;UDC=C2F;PAC=FBC;PRL=3D;KT0=2F16;SYS=4E28,0|1A79}");
-    infosPrint(data);
-    infosFree(data);
+    smlgr();
 
     return 0;
+}
+
+void smlgr()
+{
+    int *sock;
+    char *query;
+    char *response;
+    infos *data;
+
+    sock = (int *) malloc(sizeof(int));
+
+    uiMessage(UI_INFO, "Creating socket");
+    sckCreate(sock, INVERTER_IP_ADDR, INVERTER_IP_PORT);
+
+    if(*sock != -1) {
+        while(1) {
+            uiMessage(UI_INFO, "Creating inverted query string");
+            query = strPrepare(LGR_QUERY);
+
+            uiMessage(UI_INFO, "Sending query");
+            sckSend(sock, query);
+
+            uiMessage(UI_INFO, "Receiving response");
+            response = sckRecv(sock);
+
+            uiMessage(UI_INFO, "Parsing data");
+            data = strParse(response);
+
+            uiMessage(UI_INFO, "Printing data");
+            infosPrint(data);
+            //sqlSave(data);
+
+            uiMessage(UI_INFO, "Freeing memory");
+            infosFree(data);
+            free(query);
+            free(response);
+
+            uiMessage(UI_INFO, "Sleeping");
+            sleep(LGR_INTERVAL);
+        }
+    } else {
+        uiMessage(UI_ERROR, "Error creating socket.");
+    }
+
+    sckDestroy(sock);
+
+    free(sock);
 }

@@ -20,22 +20,15 @@
  */
 
 
-#ifndef __UTILS_H
-#define __UTILS_H
+#ifndef __UI_H
+#define __UI_H
 
-struct infos_s {
-    char *param;
-    char *value;
-    struct infos_s *next;
-};
+#define UI_DISABLE 0
+#define UI_ERROR 1
+#define UI_WARNING 2
+#define UI_INFO 3
+#define UI_DEBUG 4
 
-typedef struct infos_s infos;
-
-char *decToHex(int, int);
-char *checksum16(char *);
-char *strPrepare(char *);
-infos *strParse(char *);
-void infosPrint(infos *);
-void infosFree(infos *);
+void uiMessage(int, char *, ...);
 
 #endif
