@@ -50,11 +50,11 @@ void smlgr()
 
     sock = (int *) malloc(sizeof(int));
 
-    uiMessage(UI_INFO, "Creating socket");
-    sckCreate(sock, INVERTER_IP_ADDR, INVERTER_IP_PORT);
+    while(1) {
+        uiMessage(UI_INFO, "Creating socket");
+        sckCreate(sock, INVERTER_IP_ADDR, INVERTER_IP_PORT);
 
-    if(*sock != -1) {
-        while(1) {
+        if(*sock != -1) {
             uiMessage(UI_INFO, "Creating inverter query string");
             query = strPrepare(LGR_QUERY);
 
@@ -82,14 +82,14 @@ void smlgr()
                 uiMessage(UI_WARNING, "Inverter doesn't answer");
             }
 
+            sckDestroy(sock);
+            free(sock);
+
             uiMessage(UI_INFO, "Sleeping");
             sleep(LGR_INTERVAL);
+        } else {
+            uiMessage(UI_ERROR, "Error creating socket.");
         }
-    } else {
-        uiMessage(UI_ERROR, "Error creating socket.");
     }
 
-    sckDestroy(sock);
-
-    free(sock);
 }
