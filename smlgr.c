@@ -22,6 +22,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "config.h"
 #include "smlgr.h"
@@ -75,21 +76,21 @@ void smlgr()
 
                 uiMessage(UI_INFO, "Freeing memory");
                 infosFree(data);
-                free(query);
-                free(response);
-
             } else {
                 uiMessage(UI_WARNING, "Inverter doesn't answer");
             }
 
+            free(response);
+            free(query);
+
+            uiMessage(UI_INFO, "Destroying socket");
             sckDestroy(sock);
             free(sock);
-
-            uiMessage(UI_INFO, "Sleeping");
-            sleep(LGR_INTERVAL);
         } else {
             uiMessage(UI_ERROR, "Error creating socket.");
         }
-    }
 
+        uiMessage(UI_INFO, "Sleeping");
+        sleep(LGR_INTERVAL);
+    }
 }
