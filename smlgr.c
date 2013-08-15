@@ -64,18 +64,23 @@ void smlgr()
             uiMessage(UI_INFO, "Receiving response");
             response = sckRecv(sock);
 
-            uiMessage(UI_INFO, "Parsing data");
-            data = strParse(response);
+            if(strlen(response) > 0) {
+                uiMessage(UI_INFO, "Parsing data");
+                data = strParse(response);
 
-            uiMessage(UI_DEBUG, "%d elements on response", infosCounting(data));
+                uiMessage(UI_DEBUG, "%d elements on response", infosCounting(data));
 
-            uiMessage(UI_INFO, "Adding data to DB");
-            sqlSave(data);
+                uiMessage(UI_INFO, "Adding data to DB");
+                sqlSave(data);
 
-            uiMessage(UI_INFO, "Freeing memory");
-            infosFree(data);
-            free(query);
-            free(response);
+                uiMessage(UI_INFO, "Freeing memory");
+                infosFree(data);
+                free(query);
+                free(response);
+
+            } else {
+                uiMessage(UI_WARNING, "Inverter doesn't answer");
+            }
 
             uiMessage(UI_INFO, "Sleeping");
             sleep(LGR_INTERVAL);
