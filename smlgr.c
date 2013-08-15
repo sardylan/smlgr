@@ -62,6 +62,8 @@ void smlgr()
             uiMessage(UI_INFO, "Sending query");
             sckSend(sock, query);
 
+            free(query);
+
             uiMessage(UI_INFO, "Receiving response");
             response = sckRecv(sock);
 
@@ -81,11 +83,9 @@ void smlgr()
             }
 
             free(response);
-            free(query);
 
             uiMessage(UI_INFO, "Destroying socket");
             sckDestroy(sock);
-            free(sock);
         } else {
             uiMessage(UI_ERROR, "Error creating socket.");
         }
@@ -93,4 +93,6 @@ void smlgr()
         uiMessage(UI_INFO, "Sleeping");
         sleep(LGR_INTERVAL);
     }
+
+    free(sock);
 }
