@@ -1,0 +1,74 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:             smlgr
+# Required-Start:       $remote_fs $syslog
+# Required-Stop:        $remote_fs $syslog
+# Should-Start:         $network
+# Should-Stop:          $network
+# Default-Start:        2 3 4 5
+# Default-Stop:         0 1 6
+# Short-Description:    smlgr
+# Description:          SolarMax Inverter Logger
+### END INIT INFO
+
+
+. /lib/lsb/init-functions
+
+
+SMLGR_USER="smlgr"
+SMLGR_GROUP="daemons"
+SMLGR_HOME="/home/${SMLGR_GROUP}/${SMLGR_USER}/smlgr"
+SMLGR_DAEMON="${SMLGR_HOME}/smlgr"
+SMLGR_PIDFILE="/home/${SMLGR_GROUP}/${SMLGR_USER}/smlgr.pid"
+
+
+function smlgr_start() {
+    log_daemon_msg "Starting smlgr daemon" "$(basename ${SMLGR_DAEMON})"
+
+    start-stop-daemon \
+        --start \
+        --quiet \
+        --background \
+        --make-pidfile \
+        --pidfile ${SMLGR_PIDFILE} \
+        --chdir ${SMLGR_HOME} \
+        --chuid ${SMLGR_USER}:${SMLGR_GROUP} \
+        --exec ${SMLGR_DAEMON} \
+
+    log_end_msg 0
+}
+
+function smlgr_stop() {
+    log_daemon_msg "Stopping smlgr daemon" "$(basename ${SMLGR_DAEMON})"
+
+    start-stop-daemon \
+        --stop \
+        --quiet \
+        --pidfile ${SMLGR_PIDFILE} \
+
+#     if [ -r ${SMLGR_PIDFILE} ]; then
+#         rm ${SMLGR_PIDFILE}
+#     fi
+
+    log_end_msg 0
+}
+
+
+case "${1}" in
+    start)
+        smlgr_start
+    ;;
+    stop)
+        smlgr_stop
+    ;;
+    restart)
+        smlgr_stop
+        sleep 3
+        smlgr_start
+    ;;
+    *)
+        echo "Usage  $(basename ${0})  start|stop|restart"
+        exit 1
+    ;;
+esac
