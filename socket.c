@@ -46,12 +46,25 @@
 void sckCreate(int *sock, char *addr, int port)
 {
     struct sockaddr_in serv_addr;
+    struct timeval timeout;
 
     uiMessage(UI_DEBUG, "Creating socket %s:%d", addr, port);
 
+    timeout.tv_sec = 2;
+    timeout.tv_usec = 0;
+
     *sock = socket(AF_INET, SOCK_STREAM, 0);
 
+    if(*sock != -1)
+        if(setsockopt(*sock, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout)) == -1)
+            *sock = -1;
+
+    if(*sock != -1)
+        if(setsockopt(*sock, SOL_SOCKET, SO_SNDTIMEO, (char *) &timeout, sizeof(timeout)) == -1)
+            *sock = -1;
+
     if(*sock != -1) {
+
         memset(&serv_addr, '0', sizeof(serv_addr));
 
         serv_addr.sin_family = AF_INET;

@@ -49,9 +49,9 @@ void smlgr()
     char *response;
     infos *data;
 
-    sock = (int *) malloc(sizeof(int));
-
     while(1) {
+        sock = (int *) malloc(sizeof(int));
+
         uiMessage(UI_INFO, "Creating socket");
         sckCreate(sock, INVERTER_IP_ADDR, INVERTER_IP_PORT);
 
@@ -92,7 +92,7 @@ void smlgr()
 
         uiMessage(UI_INFO, "Sleeping");
         sleep(LGR_INTERVAL);
-    }
 
-    free(sock);
+        free(sock);
+    }
 }
