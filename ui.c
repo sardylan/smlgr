@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <time.h>
 
 #include "config.h"
 #include "ui.h"
@@ -38,18 +39,25 @@
 void uiMessage(int level, char *text, ...)
 {
     va_list args;
+    char datetime[20];
+    time_t rawtime;
+    struct tm *timeinfo;
+
+    rawtime = time(NULL);
+    timeinfo = localtime(&rawtime);
+    strftime(datetime, 20, "%Y-%m-%d %H:%M:%S", timeinfo);
 
     va_start(args, text);
 
     if(level <= UI_DEBUG_LEVEL)
         if(level == 1)
-            fprintf(stderr, "[ERROR] ");
+            fprintf(stderr, "%s [ERROR] ", datetime);
         if(level == 2)
-            fprintf(stderr, "[WARN]  ");
+            fprintf(stderr, "%s [WARN]  ", datetime);
         if(level == 3)
-            fprintf(stderr, "[INFO]  ");
+            fprintf(stderr, "%s [INFO]  ", datetime);
         if(level == 4)
-            fprintf(stderr, "[DEBUG] ");
+            fprintf(stderr, "%s [DEBUG] ", datetime);
 
         vfprintf(stderr, text, args);
         fprintf(stderr, "\n");
