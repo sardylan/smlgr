@@ -172,6 +172,7 @@ infos *strParse(char *response)
         value[0] = '\0';
 
         while((c = *(response + 13 + i)) != '|') {
+            printf("%c\n", c);
             if(c == '=') {
                 mode = 1;
                 j = 0;
@@ -203,6 +204,22 @@ infos *strParse(char *response)
             }
             i++;
         }
+
+        ret->next = (infos *) malloc(sizeof(infos));
+        ret = ret->next;
+        ret->next = first;
+
+        ret->param = (char *) calloc(strlen(param)+1, sizeof(char));
+        ret->value = (char *) calloc(strlen(value)+1, sizeof(char));
+        strcpy(ret->param, param);
+        strcpy(ret->value, value);
+
+        uiMessage(UI_DEBUG, "%s = %s", ret->param, ret->value);
+
+        mode = 0;
+        j = 0;
+        param[0] = '\0';
+        value[0] = '\0';
     }
 
     return first;
