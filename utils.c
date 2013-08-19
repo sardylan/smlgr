@@ -172,7 +172,6 @@ infos *strParse(char *response)
         value[0] = '\0';
 
         while((c = *(response + 13 + i)) != '|') {
-            printf("%c\n", c);
             if(c == '=') {
                 mode = 1;
                 j = 0;
