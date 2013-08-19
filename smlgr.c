@@ -85,10 +85,11 @@ void smlgr()
             free(response);
 
             uiMessage(UI_INFO, "Destroying socket");
-            sckDestroy(sock);
         } else {
             uiMessage(UI_ERROR, "Error creating socket.");
         }
+
+        sckDestroy(sock);
 
         uiMessage(UI_INFO, "Sleeping");
         sleep(LGR_INTERVAL);
