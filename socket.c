@@ -50,7 +50,7 @@ void sckCreate(int *sock, char *addr, int port)
 
     uiMessage(UI_DEBUG, "Creating socket %s:%d", addr, port);
 
-    timeout.tv_sec = 2;
+    timeout.tv_sec = 3;
     timeout.tv_usec = 0;
 
     *sock = socket(AF_INET, SOCK_STREAM, 0);
