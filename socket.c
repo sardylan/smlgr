@@ -30,6 +30,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
+#include <errno.h>
 
 #include "config.h"
 #include "socket.h"
@@ -71,8 +72,10 @@ void sckCreate(int *sock, char *addr, int port)
         serv_addr.sin_port = htons(port);
 
         if(inet_pton(AF_INET, addr, &serv_addr.sin_addr) > 0) {
-            if(connect(*sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) == -1)
+            if(connect(*sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) == -1) {
+                uiError("Error connecting socket", errno, strerror(errno));
                 *sock = -1;
+            }
         } else
             *sock = -1;
     }

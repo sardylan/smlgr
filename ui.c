@@ -64,3 +64,16 @@ void uiMessage(int level, char *text, ...)
 
     va_end(args);
 }
+
+
+/**
+ * Error message function
+ * @param[in] text Generic message
+ * @param[in] errnum Error code
+ * @param[in] errtext Error text
+ */
+
+uiError(char *text, int errnum, char *errtext)
+{
+    uiMessage("%s (%d): %s", text, errnum, errtext);
+}
