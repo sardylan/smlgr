@@ -23,7 +23,7 @@
 #ifndef __SOCKET_H
 #define __SOCKET_H
 
-void sckCreate(int *, char *, int);
+int sckCreate(int *, char *, int);
 void sckDestroy(int *);
 void sckSend(int *, char *);
 char* sckRecv(int *);

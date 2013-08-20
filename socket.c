@@ -42,12 +42,17 @@
  * @param[in] sock Valid integer pointer where to store the socket descriptor
  * @param[in] addr IP Address of the inverter
  * @param[in] port TCP port number
+ * @param[out] ret 0 if success, -1 if error
  */
 
-void sckCreate(int *sock, char *addr, int port)
+int sckCreate(int *sock, char *addr, int port)
 {
+    int ret;
+
     struct sockaddr_in serv_addr;
     struct timeval timeout;
+
+    ret = -1;
 
     uiMessage(UI_DEBUG, "Creating socket %s:%d", addr, port);
 
@@ -56,34 +61,26 @@ void sckCreate(int *sock, char *addr, int port)
 
     *sock = socket(AF_INET, SOCK_STREAM, 0);
 
-    if(*sock != -1)
-        if(setsockopt(*sock, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout)) == -1)
-            *sock = -1;
-
-    if(*sock != -1)
-        if(setsockopt(*sock, SOL_SOCKET, SO_SNDTIMEO, (char *) &timeout, sizeof(timeout)) == -1)
-            *sock = -1;
-
     if(*sock != -1) {
+        if(setsockopt(*sock, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout)) == -1)
+        if(setsockopt(*sock, SOL_SOCKET, SO_SNDTIMEO, (char *) &timeout, sizeof(timeout)) == -1)
 
         memset(&serv_addr, '0', sizeof(serv_addr));
 
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_port = htons(port);
 
-        if(inet_pton(AF_INET, addr, &serv_addr.sin_addr) > 0) {
-            if(connect(*sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) == -1) {
+        if(inet_pton(AF_INET, addr, &serv_addr.sin_addr) > 0)
+            if(connect(*sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) == 0)
+                ret = 0;
+            else
                 uiError("Error connecting socket", errno, strerror(errno));
-                *sock = -1;
-            }
-        } else {
-            *sock = -1;
+        else
             uiError("Error setting IP address", errno, strerror(errno));
-        }
-    } else {
+    } else
         uiError("Error creating socket or setting timeout", errno, strerror(errno));
-    }
 
+    return ret;
 }
 
 

@@ -45,6 +45,7 @@ int main(int argc, char **argv)
 void smlgr()
 {
     int *sock;
+    int sock_ret;
     char *query;
     char *response;
     infos *data;
@@ -53,9 +54,9 @@ void smlgr()
         sock = (int *) malloc(sizeof(int));
 
         uiMessage(UI_INFO, "Creating socket");
-        sckCreate(sock, INVERTER_IP_ADDR, INVERTER_IP_PORT);
+        sock_ret = sckCreate(sock, INVERTER_IP_ADDR, INVERTER_IP_PORT);
 
-        if(*sock != -1) {
+        if(sock_ret == 0) {
             uiMessage(UI_INFO, "Creating inverter query string");
             query = strPrepare(LGR_QUERY);
 
