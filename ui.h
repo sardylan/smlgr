@@ -30,6 +30,6 @@
 #define UI_DEBUG 4
 
 void uiMessage(int, char *, ...);
-uiError(char *, int, char *);
+void uiError(char *, int, char *);
 
 #endif

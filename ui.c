@@ -73,7 +73,7 @@ void uiMessage(int level, char *text, ...)
  * @param[in] errtext Error text
  */
 
-uiError(char *text, int errnum, char *errtext)
+void uiError(char *text, int errnum, char *errtext)
 {
-    uiMessage("%s (%d): %s", text, errnum, errtext);
+    uiMessage(4, "%s (%d): %s", text, errnum, errtext);
 }
