@@ -48,11 +48,13 @@ void sckCreate(int *sock, char *addr, int port)
 {
     struct sockaddr_in serv_addr;
     struct timeval timeout;
+    int so_reuseaddr;
 
     uiMessage(UI_DEBUG, "Creating socket %s:%d", addr, port);
 
     timeout.tv_sec = 3;
     timeout.tv_usec = 0;
+    so_reuseaddr = 1;
 
     *sock = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -62,6 +64,10 @@ void sckCreate(int *sock, char *addr, int port)
 
     if(*sock != -1)
         if(setsockopt(*sock, SOL_SOCKET, SO_SNDTIMEO, (char *) &timeout, sizeof(timeout)) == -1)
+            *sock = -1;
+
+    if(*sock != -1)
+        if(setsockopt(*sock, SOL_SOCKET, SO_REUSEADDR, &so_reuseaddr, sizeof(so_reuseaddr)) == -1)
             *sock = -1;
 
     if(*sock != -1) {
@@ -76,9 +82,14 @@ void sckCreate(int *sock, char *addr, int port)
                 uiError("Error connecting socket", errno, strerror(errno));
                 *sock = -1;
             }
-        } else
+        } else {
             *sock = -1;
+            uiError("Error setting IP address", errno, strerror(errno));
+        }
+    } else {
+        uiError("Error creating socket or setting timeout", errno, strerror(errno));
     }
+
 }
 
 
