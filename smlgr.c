@@ -90,10 +90,9 @@ void smlgr()
         }
 
         sckDestroy(sock);
+        free(sock);
 
         uiMessage(UI_INFO, "Sleeping");
         sleep(LGR_INTERVAL);
-
-        free(sock);
     }
 }
