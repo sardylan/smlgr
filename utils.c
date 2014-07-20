@@ -28,6 +28,10 @@
 #include "config.h"
 #include "utils.h"
 #include "ui.h"
+#include "cfg.h"
+
+extern cfg *conf;
+
 
 /**
  * Function used to convert an integer in a fixed-lenght hexadecimal string
@@ -116,7 +120,7 @@ char *strPrepare(char *query)
         if(ln >= 3) {
             ret = (char *) calloc(13 + ln + 6 + 1, sizeof(char));
 
-            inv_id = decToHex(INVERTER_NUM, 2);
+            inv_id = decToHex(DEFAULT_INVERTER_NUM, 2);
             len = decToHex(13 + ln + 6, 2);
 
             sprintf(tmp, "FB;%s;%s|64:%s|", inv_id, len, query);

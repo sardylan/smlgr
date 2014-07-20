@@ -30,6 +30,10 @@
 #include "sql.h"
 #include "utils.h"
 #include "ui.h"
+#include "cfg.h"
+
+extern cfg *conf;
+
 
 
 /**
@@ -103,7 +107,7 @@ void sqlSave(infos *data)
     uiMessage(UI_DEBUG, "SQL params: %s", params);
     uiMessage(UI_DEBUG, "SQL values: %s", values);
 
-    sprintf(sql_query, "INSERT INTO %s (%s) VALUES (%s);", MYSQL_TABLE, params, values);
+    sprintf(sql_query, "INSERT INTO %s (%s) VALUES (%s);", conf->mysql_table, params, values);
 
     uiMessage(UI_INFO, "Connecting to MySQL DB");
 
@@ -115,9 +119,9 @@ void sqlSave(infos *data)
 
     if(temp_connection != NULL) {
         mysql_options(temp_connection, MYSQL_OPT_CONNECT_TIMEOUT, (char *) &mysql_timeout);
-        uiMessage(UI_DEBUG, "Connecting to mysql://%s:%s@%s:%d/%s", MYSQL_USER, MYSQL_PASSWORD, MYSQL_SERVER, MYSQL_PORT, MYSQL_DB);
+        uiMessage(UI_DEBUG, "Connecting to mysql://%s:%s@%s:%d/%s", conf->mysql_user, conf->mysql_password, conf->mysql_addr, conf->mysql_port, conf->mysql_database);
 
-        mysql_connection = mysql_real_connect(temp_connection, MYSQL_SERVER, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, MYSQL_PORT, NULL, 0);
+        mysql_connection = mysql_real_connect(temp_connection, conf->mysql_addr, conf->mysql_user, conf->mysql_password, conf->mysql_database, conf->mysql_port, NULL, 0);
 
         if(mysql_connection != NULL) {
             uiMessage(UI_DEBUG, "SQL Query: %s", sql_query);

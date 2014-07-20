@@ -20,24 +20,27 @@
  */
 
 
-#ifndef __CONFIG_H
-#define __CONFIG_H
+#ifndef __CFG_H
+#define __CFG_H
 
-#define DEFAULT_UI_DEBUG_LEVEL 4
+struct cfg_s {
+    int debug_level;
+    char *inv_addr;
+    int inv_port;
+    int inv_num;
+    char *lgr_query;
+    int lgr_interval;
+    char *mysql_addr;
+    int mysql_port;
+    char *mysql_user;
+    char *mysql_password;
+    char *mysql_database;
+    char *mysql_table;
+};
 
-#define DEFAULT_INVERTER_IP_ADDR "192.168.11.99"
-#define DEFAULT_INVERTER_IP_PORT 12345
-#define DEFAULT_INVERTER_NUM 1
+typedef struct cfg_s cfg;
 
-#define DEFAULT_LGR_QUERY "UDC;IDC;UL1;IL1;PAC;PRL;TKK;TNF;KDY;KLD"
-#define DEFAULT_LGR_INTERVAL 10
-
-#define DEFAULT_MYSQL_ADDR "127.0.0.1"
-#define DEFAULT_MYSQL_PORT 3306
-#define DEFAULT_MYSQL_USER "smlgr"
-#define DEFAULT_MYSQL_PASSWORD "smlgr"
-#define DEFAULT_MYSQL_DATABASE "smlgr"
-
-#define DEFAULT_MYSQL_TABLE "invdata"
+void cfgInit();
+void cfgFree();
 
 #endif

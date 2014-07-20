@@ -32,7 +32,8 @@ OBJS =		smlgr.o \
 		utils.o \
 		socket.o \
 		sql.o \
-		ui.o
+		ui.o \
+		cfg.o
 
 
 all: debug

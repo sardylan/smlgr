@@ -19,6 +19,7 @@
  *
  */
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -30,6 +31,11 @@
 #include "socket.h"
 #include "sql.h"
 #include "ui.h"
+#include "cfg.h"
+
+cfg *conf;
+
+
 
 int main(int argc, char **argv)
 {
@@ -50,15 +56,17 @@ void smlgr()
     char *response;
     infos *data;
 
+    cfgInit();
+
     while(1) {
         sock = (int *) malloc(sizeof(int));
 
         uiMessage(UI_INFO, "Creating socket");
-        sock_ret = sckCreate(sock, INVERTER_IP_ADDR, INVERTER_IP_PORT);
+        sock_ret = sckCreate(sock, DEFAULT_INVERTER_IP_ADDR, DEFAULT_INVERTER_IP_PORT);
 
         if(sock_ret == 0) {
             uiMessage(UI_INFO, "Creating inverter query string");
-            query = strPrepare(LGR_QUERY);
+            query = strPrepare(DEFAULT_LGR_QUERY);
 
             uiMessage(UI_INFO, "Sending query");
             sckSend(sock, query);
@@ -94,6 +102,8 @@ void smlgr()
         free(sock);
 
         uiMessage(UI_INFO, "Sleeping");
-        sleep(LGR_INTERVAL);
+        sleep(DEFAULT_LGR_INTERVAL);
     }
+
+    cfgFree();
 }

@@ -28,6 +28,10 @@
 
 #include "config.h"
 #include "ui.h"
+#include "cfg.h"
+
+extern cfg *conf;
+
 
 
 /**
@@ -49,7 +53,7 @@ void uiMessage(int level, char *text, ...)
 
     va_start(args, text);
 
-    if(level <= UI_DEBUG_LEVEL)
+    if(level <= conf->debug_level)
         if(level == 1)
             fprintf(stderr, "%s [ERROR] ", datetime);
         if(level == 2)
