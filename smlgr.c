@@ -34,15 +34,22 @@
 #include "cfg.h"
 
 cfg *conf;
-
+char *smlgr_program_name;
 
 
 int main(int argc, char **argv)
 {
-    smlgr();
+    smlgr_program_name = argv[0];
+
+    cfgInit();
+
+    if(cfgParse(argc, argv))
+        smlgr();
 
     return 0;
 }
+
+
 
 /**
  * Main program function
@@ -56,17 +63,15 @@ void smlgr()
     char *response;
     infos *data;
 
-    cfgInit();
-
     while(1) {
         sock = (int *) malloc(sizeof(int));
 
         uiMessage(UI_INFO, "Creating socket");
-        sock_ret = sckCreate(sock, DEFAULT_INVERTER_IP_ADDR, DEFAULT_INVERTER_IP_PORT);
+        sock_ret = sckCreate(sock, conf->inv_addr, conf->inv_port);
 
         if(sock_ret == 0) {
             uiMessage(UI_INFO, "Creating inverter query string");
-            query = strPrepare(DEFAULT_LGR_QUERY);
+            query = strPrepare(conf->lgr_query);
 
             uiMessage(UI_INFO, "Sending query");
             sckSend(sock, query);
@@ -102,7 +107,7 @@ void smlgr()
         free(sock);
 
         uiMessage(UI_INFO, "Sleeping");
-        sleep(DEFAULT_LGR_INTERVAL);
+        sleep(conf->lgr_interval);
     }
 
     cfgFree();

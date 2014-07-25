@@ -37,6 +37,7 @@
 #include "ui.h"
 
 
+
 /**
  * This function returns a connected socket to the SolarMax inverter
  * @param[in] sock Valid integer pointer where to store the socket descriptor

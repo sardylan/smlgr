@@ -24,8 +24,10 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <string.h>
+#include <getopt.h>
 
 #include "config.h"
+#include "ui.h"
 #include "cfg.h"
 
 extern cfg *conf;
@@ -97,4 +99,137 @@ void cfgFree()
     free(conf->mysql_table);
 
     free(conf);
+}
+
+
+
+/**
+ * Parsing options
+ * @param[in] argc Number of arguments in command line
+ * @param[in] argv Arguments strings in command line
+ * @param[out] ret Returns 0 in case of error, 1 if not
+ */
+
+int cfgParse(int argc, char **argv)
+{
+    int ret = 0;
+    int option_index = 0;
+    int c;
+    int ln;
+
+    static struct option long_options[] = {
+        {"help", no_argument, 0, 'h'},
+        {"version", no_argument, 0, 'V'},
+        {"quiet", no_argument, 0, 'q'},
+        {"verbose", no_argument, 0, 'v'},
+        {"debug", required_argument, 0, 'd'},
+        {"inv-addr", required_argument, 0, 'a'},
+        {"inv-port", required_argument, 0, 'p'},
+        {"inv-num", required_argument, 0, 'n'},
+        {"query", required_argument, 0, 'k'},
+        {"interval", required_argument, 0, 'i'},
+        {"mysql-addr", required_argument, 0, 's'},
+        {"mysql-port", required_argument, 0, 't'},
+        {"mysql-user", required_argument, 0, 'u'},
+        {"mysql-password", required_argument, 0, 'w'},
+        {"mysql-database", required_argument, 0, 'b'},
+        {"mysql-table", required_argument, 0, 'l'},
+        {0, 0, 0, 0}
+    };
+
+    while(1) {
+        c = getopt_long(argc, argv, "hVqvd:a:p:n:k:i:s:t:u:w:b:l:", long_options, &option_index);
+
+        if(c == -1) {
+            ret = 1;
+            break;
+        }
+
+        if(c == '?') {
+            uiHelp();
+            break;
+        }
+
+        if(c == 'h') {
+            uiHelp();
+            break;
+        }
+
+        if(c == 'V') {
+            uiVersion();
+            break;
+        }
+
+        if(c == 'q') {
+            conf->debug_level = 0;
+        }
+
+        if(c == 'v') {
+            conf->debug_level = 4;
+        }
+
+        if(c == 'd') {
+            conf->debug_level = atoi(optarg);
+        }
+
+        if(c == 'a') {
+            ln = strlen(optarg) + 1;
+            conf->inv_addr = (char *) realloc((void *) conf->inv_addr, sizeof(char) * ln);
+            strcpy(conf->inv_addr, optarg);
+        }
+
+        if(c == 'p') {
+            conf->inv_port = atoi(optarg);
+        }
+
+        if(c == 'n') {
+            conf->inv_num = atoi(optarg);
+        }
+
+        if(c == 'k') {
+            ln = strlen(optarg) + 1;
+            conf->lgr_query = (char *) realloc((void *) conf->lgr_query, sizeof(char) * ln);
+            strcpy(conf->lgr_query, optarg);
+        }
+
+        if(c == 'i') {
+            conf->lgr_interval = atoi(optarg);
+        }
+
+        if(c == 's') {
+            ln = strlen(optarg) + 1;
+            conf->mysql_addr = (char *) realloc((void *) conf->mysql_addr, sizeof(char) * ln);
+            strcpy(conf->mysql_addr, optarg);
+        }
+
+        if(c == 't') {
+            conf->mysql_port = atoi(optarg);
+        }
+
+        if(c == 'u') {
+            ln = strlen(optarg) + 1;
+            conf->mysql_user = (char *) realloc((void *) conf->mysql_user, sizeof(char) * ln);
+            strcpy(conf->mysql_user, optarg);
+        }
+
+        if(c == 'w') {
+            ln = strlen(optarg) + 1;
+            conf->mysql_password = (char *) realloc((void *) conf->mysql_password, sizeof(char) * ln);
+            strcpy(conf->mysql_password, optarg);
+        }
+
+        if(c == 'b') {
+            ln = strlen(optarg) + 1;
+            conf->mysql_database = (char *) realloc((void *) conf->mysql_database, sizeof(char) * ln);
+            strcpy(conf->mysql_database, optarg);
+        }
+
+        if(c == 'l') {
+            ln = strlen(optarg) + 1;
+            conf->mysql_table = (char *) realloc((void *) conf->mysql_table, sizeof(char) * ln);
+            strcpy(conf->mysql_table, optarg);
+        }
+    }
+
+    return ret;
 }

@@ -29,7 +29,11 @@
 #define UI_INFO 3
 #define UI_DEBUG 4
 
+void uiUsage();
+void uiVersion();
+void uiHelp();
 void uiMessage(int, char *, ...);
 void uiError(char *, int, char *);
+
 
 #endif
