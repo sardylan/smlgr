@@ -24,7 +24,7 @@ SMLGR_PIDFILE="/home/${SMLGR_GROUP}/${SMLGR_USER}/smlgr.pid"
 
 
 function smlgr_start() {
-    log_daemon_msg "Starting smlgr daemon" "$(basename ${SMLGR_DAEMON})"
+    log_daemon_msg "Starting SolarMax Inverter Logger daemon" "$(basename ${SMLGR_DAEMON})"
 
     start-stop-daemon \
         --start \
@@ -34,24 +34,21 @@ function smlgr_start() {
         --pidfile ${SMLGR_PIDFILE} \
         --chdir ${SMLGR_HOME} \
         --chuid ${SMLGR_USER}:${SMLGR_GROUP} \
-        --exec ${SMLGR_DAEMON} \
+        --exec ${SMLGR_DAEMON}
 
-    log_end_msg 0
+    log_end_msg ${?}
 }
 
 function smlgr_stop() {
-    log_daemon_msg "Stopping smlgr daemon" "$(basename ${SMLGR_DAEMON})"
+    log_daemon_msg "Stopping SolarMax Inverter Logger daemon" "$(basename ${SMLGR_DAEMON})"
 
     start-stop-daemon \
         --stop \
+        --retry forever/TERM \
         --quiet \
         --pidfile ${SMLGR_PIDFILE} \
 
-#     if [ -r ${SMLGR_PIDFILE} ]; then
-#         rm ${SMLGR_PIDFILE}
-#     fi
-
-    log_end_msg 0
+    log_end_msg ${?}
 }
 
 
