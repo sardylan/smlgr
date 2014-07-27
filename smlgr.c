@@ -43,8 +43,10 @@ int main(int argc, char **argv)
 
     cfgInit();
 
-    if(cfgParse(argc, argv))
+    if(cfgParse(argc, argv)) {
+        cfgPrint();
         smlgr();
+    }
 
     return 0;
 }

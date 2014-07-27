@@ -85,6 +85,28 @@ void cfgInit()
 
 
 /**
+ * Configuration print
+ */
+
+void cfgPrint()
+{
+    uiMessage(UI_INFO, "debug_level = %d", conf->debug_level);
+    uiMessage(UI_INFO, "inv_addr = %s", conf->inv_addr);
+    uiMessage(UI_INFO, "inv_port = %d", conf->inv_port);
+    uiMessage(UI_INFO, "inv_num = %d", conf->inv_num);
+    uiMessage(UI_INFO, "lgr_query = %s", conf->lgr_query);
+    uiMessage(UI_INFO, "lgr_interval = %d", conf->lgr_interval);
+    uiMessage(UI_INFO, "mysql_addr = %s", conf->mysql_addr);
+    uiMessage(UI_INFO, "mysql_port = %d", conf->mysql_port);
+    uiMessage(UI_INFO, "mysql_user = %s", conf->mysql_user);
+    uiMessage(UI_INFO, "mysql_password = %s", conf->mysql_password);
+    uiMessage(UI_INFO, "mysql_database = %s", conf->mysql_database);
+    uiMessage(UI_INFO, "mysql_table = %s", conf->mysql_table);
+}
+
+
+
+/**
  * Configuration free
  */
 

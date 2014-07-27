@@ -42,6 +42,7 @@ typedef struct cfg_s cfg;
 
 void cfgInit();
 void cfgFree();
+void cfgPrint();
 int cfgParse(int, char **);
 int cfgFileParse(char *);
 

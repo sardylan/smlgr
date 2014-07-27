@@ -118,26 +118,27 @@ void uiMessage(int level, char *text, ...)
     time_t rawtime;
     struct tm *timeinfo;
 
-    rawtime = time(NULL);
-    timeinfo = localtime(&rawtime);
-    strftime(datetime, 20, "%Y-%m-%d %H:%M:%S", timeinfo);
+    if(level <= conf->debug_level) {
+        rawtime = time(NULL);
+        timeinfo = localtime(&rawtime);
+        strftime(datetime, 20, "%Y-%m-%d %H:%M:%S", timeinfo);
 
-    va_start(args, text);
+        va_start(args, text);
 
-    if(level <= conf->debug_level)
-        if(level == 1)
+        if(level == UI_ERROR)
             fprintf(stderr, "%s [ERROR] ", datetime);
-        if(level == 2)
+        if(level == UI_WARNING)
             fprintf(stderr, "%s [WARN]  ", datetime);
-        if(level == 3)
+        if(level == UI_INFO)
             fprintf(stderr, "%s [INFO]  ", datetime);
-        if(level == 4)
+        if(level == UI_DEBUG)
             fprintf(stderr, "%s [DEBUG] ", datetime);
 
         vfprintf(stderr, text, args);
         fprintf(stderr, "\n");
 
-    va_end(args);
+        va_end(args);
+    }
 }
 
 
