@@ -116,8 +116,11 @@ int cfgParse(int argc, char **argv)
     int option_index = 0;
     int c;
     int ln;
+    int conf_file = 0;
+    char *config_file;
 
     static struct option long_options[] = {
+        {"config", required_argument, 0, 'c'},
         {"help", no_argument, 0, 'h'},
         {"version", no_argument, 0, 'V'},
         {"quiet", no_argument, 0, 'q'},
@@ -138,7 +141,7 @@ int cfgParse(int argc, char **argv)
     };
 
     while(1) {
-        c = getopt_long(argc, argv, "hVqvd:a:p:n:k:i:s:t:u:w:b:l:", long_options, &option_index);
+        c = getopt_long(argc, argv, "c:hVqvd:a:p:n:k:i:s:t:u:w:b:l:", long_options, &option_index);
 
         if(c == -1) {
             ret = 1;
@@ -148,6 +151,14 @@ int cfgParse(int argc, char **argv)
         if(c == '?') {
             uiHelp();
             break;
+        }
+
+        if(c == 'c') {
+            conf_file = 1;
+
+            ln = strlen(optarg) + 1;
+            config_file = (char *) calloc(sizeof(char), ln);
+            strcpy(config_file, optarg);
         }
 
         if(c == 'h') {
@@ -229,6 +240,122 @@ int cfgParse(int argc, char **argv)
             conf->mysql_table = (char *) realloc((void *) conf->mysql_table, sizeof(char) * ln);
             strcpy(conf->mysql_table, optarg);
         }
+    }
+
+    if(conf_file == 1) {
+        ret = cfgFileParse(config_file);
+        free(config_file);
+    }
+
+    return ret;
+}
+
+
+
+/**
+ * Parsing options
+ * @param[in] config_file Path of a config file to parse
+ * @param[out] ret Returns 0 in case of error, 1 if not
+ */
+
+int cfgFileParse(char *config_file)
+{
+    int ret = 0;
+    FILE *fd;
+    char param[80];
+    char value[80];
+    int ln;
+
+    fd = fopen(config_file, "r");
+
+    if(fd != NULL) {
+        uiMessage(UI_INFO, "Parsing config file %s", config_file);
+
+        while(!feof(fd)) {
+            fscanf(fd, "%s %s", param, value);
+
+            uiMessage(UI_DEBUG, "Param: %s - Value: %s", param, value);
+
+            if(strcmp(param, "debug") == 0) {
+                conf->debug_level = atoi(value);
+                uiMessage(UI_DEBUG, "Configuration updated. debug_level = %d", conf->debug_level);
+            }
+
+            if(strcmp(param, "inv-addr") == 0) {
+                ln = strlen(value) + 1;
+                conf->inv_addr = (char *) realloc((void *) conf->inv_addr, sizeof(char) * ln);
+                strcpy(conf->inv_addr, value);
+                uiMessage(UI_DEBUG, "Configuration updated. inv_addr = %s", conf->inv_addr);
+            }
+
+            if(strcmp(param, "inv-port") == 0) {
+                conf->inv_port = atoi(value);
+                uiMessage(UI_DEBUG, "Configuration updated. inv_port = %d", conf->inv_port);
+            }
+
+            if(strcmp(param, "inv-num") == 0) {
+                conf->inv_num = atoi(value);
+                uiMessage(UI_DEBUG, "Configuration updated. inv_num = %d", conf->inv_num);
+            }
+
+            if(strcmp(param, "query") == 0) {
+                ln = strlen(value) + 1;
+                conf->lgr_query = (char *) realloc((void *) conf->lgr_query, sizeof(char) * ln);
+                strcpy(conf->lgr_query, value);
+                uiMessage(UI_DEBUG, "Configuration updated. lgr_query = %s", conf->lgr_query);
+            }
+
+            if(strcmp(param, "interval") == 0) {
+                conf->lgr_interval = atoi(value);
+                uiMessage(UI_DEBUG, "Configuration updated. lgr_interval = %d", conf->lgr_interval);
+            }
+
+            if(strcmp(param, "mysql-addr") == 0) {
+                ln = strlen(value) + 1;
+                conf->mysql_addr = (char *) realloc((void *) conf->mysql_addr, sizeof(char) * ln);
+                strcpy(conf->mysql_addr, value);
+                uiMessage(UI_DEBUG, "Configuration updated. mysql_addr = %s", conf->mysql_addr);
+            }
+
+            if(strcmp(param, "mysql-port") == 0) {
+                conf->mysql_port = atoi(value);
+                uiMessage(UI_DEBUG, "Configuration updated. mysql_port = %d", conf->mysql_port);
+            }
+
+            if(strcmp(param, "mysql-user") == 0) {
+                ln = strlen(value) + 1;
+                conf->mysql_user = (char *) realloc((void *) conf->mysql_user, sizeof(char) * ln);
+                strcpy(conf->mysql_user, value);
+                uiMessage(UI_DEBUG, "Configuration updated. mysql_user = %s", conf->mysql_user);
+            }
+
+            if(strcmp(param, "mysql-password") == 0) {
+                ln = strlen(value) + 1;
+                conf->mysql_password = (char *) realloc((void *) conf->mysql_password, sizeof(char) * ln);
+                strcpy(conf->mysql_password, value);
+                uiMessage(UI_DEBUG, "Configuration updated. mysql_password = %s", conf->mysql_password);
+            }
+
+            if(strcmp(param, "mysql-database") == 0) {
+                ln = strlen(value) + 1;
+                conf->mysql_database = (char *) realloc((void *) conf->mysql_database, sizeof(char) * ln);
+                strcpy(conf->mysql_database, value);
+                uiMessage(UI_DEBUG, "Configuration updated. mysql_database = %s", conf->mysql_database);
+            }
+
+            if(strcmp(param, "mysql-table") == 0) {
+                ln = strlen(value) + 1;
+                conf->mysql_table = (char *) realloc((void *) conf->mysql_table, sizeof(char) * ln);
+                strcpy(conf->mysql_table, value);
+                uiMessage(UI_DEBUG, "Configuration updated. mysql_table = %s", conf->mysql_table);
+            }
+        }
+
+        fclose(fd);
+
+        ret = 1;
+    } else {
+        uiMessage(UI_ERROR, "Unable to open config file %s", config_file);
     }
 
     return ret;

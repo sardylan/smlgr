@@ -21,6 +21,7 @@ SMLGR_GROUP="daemons"
 SMLGR_HOME="/home/${SMLGR_GROUP}/${SMLGR_USER}/smlgr"
 SMLGR_DAEMON="${SMLGR_HOME}/smlgr"
 SMLGR_PIDFILE="/home/${SMLGR_GROUP}/${SMLGR_USER}/smlgr.pid"
+SMLGR_CONFIG_FILE="/home/${SMLGR_GROUP}/${SMLGR_USER}/smlgr.conf"
 
 
 function smlgr_start() {
@@ -34,7 +35,9 @@ function smlgr_start() {
         --pidfile ${SMLGR_PIDFILE} \
         --chdir ${SMLGR_HOME} \
         --chuid ${SMLGR_USER}:${SMLGR_GROUP} \
-        --exec ${SMLGR_DAEMON}
+        --exec ${SMLGR_DAEMON} \
+        -- \
+        --config ${SMLGR_CONFIG_FILE}
 
     log_end_msg ${?}
 }

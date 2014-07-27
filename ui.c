@@ -71,6 +71,8 @@ void uiHelp()
     fprintf(stderr, "\n");
     fprintf(stderr, "Options list with default values:\n");
     fprintf(stderr, "\n");
+    fprintf(stderr, "    -c | --config            Config file (overwrite all other options)\n");
+    fprintf(stderr, "\n");
     fprintf(stderr, "    -h | --help              This message\n");
     fprintf(stderr, "    -V | --version           Print Version and exit\n");
     fprintf(stderr, "\n");
@@ -148,5 +150,5 @@ void uiMessage(int level, char *text, ...)
 
 void uiError(char *text, int errnum, char *errtext)
 {
-    uiMessage(4, "%s (%d): %s", text, errnum, errtext);
+    uiMessage(UI_ERROR, "%s (%d): %s", text, errnum, errtext);
 }
