@@ -22,7 +22,7 @@
 CC =		gcc
 STRIP =		strip
 
-CFLAGS =	-O0 -ggdb -Wall
+CFLAGS =	-O2 -ggdb -Wall
 LDFLAGS =	-lmysqlclient
 STRIPFLAGS =	--strip-all
 
