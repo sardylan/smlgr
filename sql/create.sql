@@ -1,5 +1,6 @@
+DROP TABLE IF EXISTS 'invdata';
+
 CREATE TABLE IF NOT EXISTS 'invdata' (
-    'id' int(11) NOT NULL AUTO_INCREMENT,
     'whenquery' timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     'UDC' int(11) NOT NULL,
     'IDC' int(11) NOT NULL,
@@ -10,8 +11,6 @@ CREATE TABLE IF NOT EXISTS 'invdata' (
     'TKK' int(11) NOT NULL,
     'TNF' int(11) NOT NULL,
     'KDY' int(11) NOT NULL,
-    'KLD' int(11) NOT NULL
+    'KLD' int(11) NOT NULL,
+    PRIMARY KEY ('whenquery')
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
-ALTER TABLE 'invdata'
-    ADD PRIMARY KEY ('id');
