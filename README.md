@@ -11,3 +11,5 @@ SolarMax proprietary communication protocol.
 
 It's the data collector part of a bigger statistic project which aims
 to create a detailed production report on energy production.
+
+A new improved version is available at https://github.com/smlgr/
